@@ -4,7 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-"""Module to handle downloads for different types of Firefox and Thunderbird builds."""
+"""Module to handle downloads for different types of Firefox, Thunderbird and Mobile builds."""
 
 
 from datetime import datetime
@@ -20,7 +20,7 @@ from parser import DirectoryParser
 from timezones import PacificTimezone
 
 
-APPLICATIONS = ['firefox', 'thunderbird']
+APPLICATIONS = ['firefox', 'thunderbird', 'fennec']
 
 # Base URL for the path to all builds
 BASE_URL = 'https://ftp.mozilla.org/pub/mozilla.org'
@@ -30,7 +30,8 @@ PLATFORM_FRAGMENTS = {'linux': 'linux-i686',
                       'mac': 'mac',
                       'mac64': 'mac64',
                       'win32': 'win32',
-                      'win64': 'win64-x86_64'}
+                      'win64': 'win64-x86_64',
+                      'android': 'android-arm'}
 
 
 class NotFoundException(Exception):
@@ -57,7 +58,7 @@ class Scraper(object):
 
         # build the base URL
         self.application = application
-        self.base_url = '/'.join([BASE_URL, self.application])
+        self.base_url = '/'.join([BASE_URL, 'mobile' if self.application == 'fennec' else self.application])
 
 
     @property
@@ -102,7 +103,8 @@ class Scraper(object):
                  'mac': '.dmg',
                  'mac64': '.dmg',
                  'win32': '.exe',
-                 'win64': '.exe'}
+                 'win64': '.exe',
+                 'android': '.apk'}
         return regex[self.platform]
 
 
@@ -505,7 +507,8 @@ class TinderboxScraper(Scraper):
                         'mac': r'.*\.dmg$',
                         'mac64': r'.*\.dmg$',
                         'win32': r'.*\.exe$',
-                        'win64': r'.*\.exe$'}
+                        'win64': r'.*\.exe$',
+                        'android': r'.*\.apk$'}
 
         regex = regex_base_name + regex_suffix[self.platform]
 
@@ -613,7 +616,8 @@ class TinderboxScraper(Scraper):
                               'mac': 'macosx',
                               'mac64': 'macosx64',
                               'win32': 'win32',
-                              'win64': 'win64'}
+                              'win64': 'win64',
+                              'android': 'android'}
 
         return PLATFORM_FRAGMENTS[self.platform]
 
