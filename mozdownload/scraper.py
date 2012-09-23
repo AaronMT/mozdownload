@@ -337,7 +337,8 @@ class ReleaseScraper(Scraper):
                  'mac': r'^%s.*.dmg$',
                  'mac64': r'^%s.*.dmg$',
                  'win32': r'^%s.*.exe$',
-                 'win64': r'^%s.*.exe$'}
+                 'win64': r'^%s.*.exe$',
+                 'android': r'^%s.*.apk'}
         return regex[self.platform] % self.application
 
 
@@ -402,7 +403,7 @@ class ReleaseCandidateScraper(ReleaseScraper):
            a candidate build."""
 
         # Regex for possible builds for the given date
-        return r'nightly/%(VERSION)s-candidates/' % {
+        return r'candidates/%(VERSION)s-candidates/' % {
                  'VERSION': self.version }
 
 
@@ -414,7 +415,7 @@ class ReleaseCandidateScraper(ReleaseScraper):
         return regex % {'PREFIX': self.candidate_build_list_regex,
                         'BUILD': self.builds[self.build_index],
                         'LOCALE': self.locale,
-                        'PLATFORM': self.platform_regex,
+                        'PLATFORM': 'android' if self.platform_regex == 'android-arm' else self.platform_regex,
                         'UNSIGNED': "unsigned/" if self.unsigned else ""}
 
 
