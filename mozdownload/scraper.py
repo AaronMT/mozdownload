@@ -348,7 +348,7 @@ class ReleaseScraper(Scraper):
 
         regex = r'releases/%(VERSION)s/%(PLATFORM)s/%(LOCALE)s'
         return regex % {'LOCALE': self.locale,
-                        'PLATFORM': self.platform_regex,
+                        'PLATFORM': 'android' if self.platform_regex == 'android-arm' else self.platform_regex,
                         'VERSION': self.version}
 
 
